@@ -41,6 +41,7 @@ public class EmployeeController {
 
     public void clear() {
         employees.clear();
+        this.id = 1;
     }
 
 }
