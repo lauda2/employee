@@ -1,5 +1,6 @@
 package com.example.employee;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,11 +20,18 @@ public class EmployeeControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private EmployeeController employeeController;
+
+    @BeforeEach
+    public void setUp() {
+        employeeController.clear();
+    }
+
     @Test
     public void should_return_created_employee_when_post() throws Exception {
         String requestBody = """
                 {
-                    "id": 1,
                     "name": "John Smith",
                     "age": 32,
                     "gender": "Male",
@@ -38,6 +46,39 @@ public class EmployeeControllerTests {
                 .andExpect(jsonPath("$.gender").value("Male"))
                 .andExpect(jsonPath("$.age").value(32))
                 .andExpect(jsonPath("$.salary").value(5000.0));
+    }
+
+    @Test
+    public void should_return_employee_when_get_id() throws Exception {
+        Employee employee = new Employee(null, "John Smith", 32, "Male", 5000.0);
+        Employee createdEmployee = employeeController.create(employee);
+
+        MockHttpServletRequestBuilder request = get("/employees/" + createdEmployee.id()).contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(createdEmployee.id()))
+                .andExpect(jsonPath("$.name").value(createdEmployee.name()))
+                .andExpect(jsonPath("$.gender").value(createdEmployee.gender()))
+                .andExpect(jsonPath("$.age").value(createdEmployee.age()))
+                .andExpect(jsonPath("$.salary").value(createdEmployee.salary()));
+    }
+
+    @Test
+    public void should_return_employee_when_list_by_male() throws Exception {
+        Employee createdMaleEmployee = employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        employeeController.create(new Employee(null, "Lily", 22, "Female", 5000.0));
+
+        MockHttpServletRequestBuilder request = get("/employees?gender=male").contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].id").value(createdMaleEmployee.id()))
+                .andExpect(jsonPath("$[0].name").value(createdMaleEmployee.name()))
+                .andExpect(jsonPath("$[0].gender").value(createdMaleEmployee.gender()))
+                .andExpect(jsonPath("$[0].age").value(createdMaleEmployee.age()))
+                .andExpect(jsonPath("$[0].salary").value(createdMaleEmployee.salary()));
     }
 
 }
