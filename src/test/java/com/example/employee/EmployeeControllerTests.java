@@ -9,9 +9,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.Collections;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.empty;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -134,6 +137,33 @@ public class EmployeeControllerTests {
                 .andExpect(status().isNoContent());
     }
 
+    @Test
+    public void should_return_five_employees_on_page_1_when_select_page_equal_1_size_equal_5() throws Exception {
+        employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        employeeController.create(new Employee(null, "Lily", 22, "Female", 5000.0));
+        employeeController.create(new Employee(null, "Lily", 22, "Female", 5000.0));
+        employeeController.create(new Employee(null, "Lily", 22, "Female", 5000.0));
+        employeeController.create(new Employee(null, "Lily", 22, "Female", 5000.0));
+        employeeController.create(new Employee(null, "Lily", 22, "Female", 5000.0));
+        employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
 
+        MockHttpServletRequestBuilder request = get("/employees?page=1&size=5").contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5))
+                .andExpect(jsonPath("$[0].name").value("Lily"))
+                .andExpect(jsonPath("$[1].name").value("Lily"))
+                .andExpect(jsonPath("$[2].name").value("Lily"))
+                .andExpect(jsonPath("$[3].name").value("Lily"))
+                .andExpect(jsonPath("$[4].name").value("Lily"));
+    }
 
 }

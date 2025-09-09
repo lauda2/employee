@@ -3,6 +3,7 @@ package com.example.employee;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,9 @@ public class EmployeeController {
         List<Employee> returnEmployees = new ArrayList<>(employees.values());
         if (gender != null) {
             returnEmployees = returnEmployees.stream().filter(employee -> employee.gender().equals(gender)).toList();
+        }
+        if (page != null && size != null && page >= 0 && page < (returnEmployees.size() / size + 1) && size > 0) {
+            returnEmployees = returnEmployees.subList(page * size, Math.min(page * size + size, returnEmployees.size()));
         }
         return returnEmployees;
     }
