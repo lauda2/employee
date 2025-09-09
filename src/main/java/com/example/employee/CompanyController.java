@@ -3,7 +3,9 @@ package com.example.employee;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,6 +22,12 @@ public class CompanyController {
         Companies.put(newCompany.id(), newCompany);
         this.id++;
         return newCompany;
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Company> get() {
+        return new ArrayList<>(Companies.values());
     }
 
     public void clear() {
