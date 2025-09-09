@@ -36,6 +36,14 @@ public class CompanyController {
         return Companies.get(id);
     }
 
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Company update(@PathVariable Integer id, @RequestBody Company company) {
+        Company newCompany = new Company(id, company.name());
+        Companies.put(id, newCompany);
+        return newCompany;
+    }
+
     public void clear() {
         Companies.clear();
         this.id = 1;
