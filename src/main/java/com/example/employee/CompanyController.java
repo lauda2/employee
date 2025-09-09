@@ -12,14 +12,14 @@ import java.util.Map;
 @RequestMapping("companies")
 public class CompanyController {
 
-    private Map<Integer, Company> Companies = new HashMap<>();
+    private Map<Integer, Company> companies = new HashMap<>();
     private int id = 1;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Company create(@RequestBody Company company) {
         Company newCompany = new Company(this.id, company.name());
-        Companies.put(newCompany.id(), newCompany);
+        companies.put(newCompany.id(), newCompany);
         this.id++;
         return newCompany;
     }
@@ -27,31 +27,31 @@ public class CompanyController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Company> getAll() {
-        return new ArrayList<>(Companies.values());
+        return new ArrayList<>(companies.values());
     }
 
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public Company get(@PathVariable Integer id) {
-        return Companies.get(id);
+        return companies.get(id);
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public Company update(@PathVariable Integer id, @RequestBody Company company) {
         Company newCompany = new Company(id, company.name());
-        Companies.put(id, newCompany);
+        companies.put(id, newCompany);
         return newCompany;
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
-        Companies.remove(id);
+        companies.remove(id);
     }
 
     public void clear() {
-        Companies.clear();
+        companies.clear();
         this.id = 1;
     }
 
