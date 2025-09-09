@@ -26,8 +26,14 @@ public class CompanyController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Company> get() {
+    public List<Company> getAll() {
         return new ArrayList<>(Companies.values());
+    }
+
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Company get(@PathVariable Integer id) {
+        return Companies.get(id);
     }
 
     public void clear() {
