@@ -95,4 +95,31 @@ public class CompanyControllerTests {
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    public void should_return_five_employees_on_page_1_when_select_page_equal_1_size_equal_5() throws  Exception {
+        companyController.create(new Company(null, "A"));
+        companyController.create(new Company(null, "A"));
+        companyController.create(new Company(null, "A"));
+        companyController.create(new Company(null, "B"));
+        companyController.create(new Company(null, "B"));
+        companyController.create(new Company(null, "B"));
+        companyController.create(new Company(null, "C"));
+        companyController.create(new Company(null, "C"));
+        companyController.create(new Company(null, "D"));
+        companyController.create(new Company(null, "A"));
+        companyController.create(new Company(null, "A"));
+        companyController.create(new Company(null, "A"));
+
+        MockHttpServletRequestBuilder request = get("/companies?page=1&size=5").contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5))
+                .andExpect(jsonPath("$[0].name").value("B"))
+                .andExpect(jsonPath("$[1].name").value("C"))
+                .andExpect(jsonPath("$[2].name").value("C"))
+                .andExpect(jsonPath("$[3].name").value("D"))
+                .andExpect(jsonPath("$[4].name").value("A"));
+    }
 }
