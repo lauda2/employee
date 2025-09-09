@@ -81,4 +81,23 @@ public class EmployeeControllerTests {
                 .andExpect(jsonPath("$[0].salary").value(createdMaleEmployee.salary()));
     }
 
+    @Test
+    public void should_return_all_employees_when_get_employee_list() throws Exception {
+        Employee createdMaleEmployee = employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        employeeController.create(new Employee(null, "", 0, "", 0.0));
+        employeeController.create(new Employee(null, "", 0, "", 0.0));
+        employeeController.create(new Employee(null, "", 0, "", 0.0));
+        employeeController.create(new Employee(null, "", 0, "", 0.0));
+        MockHttpServletRequestBuilder request = get("/employees").contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5))
+                .andExpect(jsonPath("$[0].id").value(createdMaleEmployee.id()))
+                .andExpect(jsonPath("$[0].name").value(createdMaleEmployee.name()))
+                .andExpect(jsonPath("$[0].gender").value(createdMaleEmployee.gender()))
+                .andExpect(jsonPath("$[0].age").value(createdMaleEmployee.age()))
+                .andExpect(jsonPath("$[0].salary").value(createdMaleEmployee.salary()));
+    }
+
 }
