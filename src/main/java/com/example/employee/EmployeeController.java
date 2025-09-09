@@ -39,6 +39,14 @@ public class EmployeeController {
         return returnEmployees;
     }
 
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Employee update(@PathVariable int id, @RequestBody Employee employee) {
+        employees.put(id, employee);
+        return employees.get(id);
+    }
+
+
     public void clear() {
         employees.clear();
         this.id = 1;

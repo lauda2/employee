@@ -100,4 +100,29 @@ public class EmployeeControllerTests {
                 .andExpect(jsonPath("$[0].salary").value(createdMaleEmployee.salary()));
     }
 
+    @Test
+    public void should_return_updated_employee_when_update_employee() throws Exception {
+        Employee createdMaleEmployee = employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        String requestBody = """
+                {
+                    "id": 1,
+                    "name": "John Smith",
+                    "age": 33,
+                    "gender": "Male",
+                    "salary": 10000.0
+                }""";
+
+        MockHttpServletRequestBuilder request = put("/employees/1").contentType(MediaType.APPLICATION_JSON).content(requestBody);
+
+        mockMvc.perform(request)
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.length()").value(5))
+                .andExpect(jsonPath("$.id").value(createdMaleEmployee.id()))
+                .andExpect(jsonPath("$.name").value(createdMaleEmployee.name()))
+                .andExpect(jsonPath("$.gender").value(createdMaleEmployee.gender()))
+                .andExpect(jsonPath("$.age").value(33))
+                .andExpect(jsonPath("$.salary").value(10000.0));
+    }
+
+
 }
