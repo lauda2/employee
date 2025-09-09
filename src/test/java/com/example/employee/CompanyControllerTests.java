@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.concurrent.ConcurrentMap;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -82,5 +84,15 @@ public class CompanyControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(company.id()))
                 .andExpect(jsonPath("$.name").value("B"));
+    }
+
+    @Test
+    public void should_return_204_when_delete_employee() throws Exception {
+        Company company = companyController.create(new Company(null, "A"));
+
+        MockHttpServletRequestBuilder request = delete("/companies/" + company.id()).contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isNoContent());
     }
 }
