@@ -69,7 +69,7 @@ public class EmployeeControllerTests {
         Employee createdMaleEmployee = employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
         employeeController.create(new Employee(null, "Lily", 22, "Female", 5000.0));
 
-        MockHttpServletRequestBuilder request = get("/employees?gender=male").contentType(MediaType.APPLICATION_JSON);
+        MockHttpServletRequestBuilder request = get("/employees?gender=Male").contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
                 .andExpect(status().isOk())
