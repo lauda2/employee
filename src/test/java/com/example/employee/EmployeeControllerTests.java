@@ -124,5 +124,16 @@ public class EmployeeControllerTests {
                 .andExpect(jsonPath("$.salary").value(10000.0));
     }
 
+    @Test
+    public void should_return_204_when_delete_employee() throws Exception {
+        employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+
+        MockHttpServletRequestBuilder request = delete("/employees/1").contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isNoContent());
+    }
+
+
 
 }
