@@ -12,7 +12,7 @@ import java.util.Map;
 @RequestMapping("companies")
 public class CompanyController {
 
-    private Map<Integer, Company> companies = new HashMap<>();
+    private final Map<Integer, Company> companies = new HashMap<>();
     private int id = 1;
 
     @PostMapping
@@ -27,11 +27,11 @@ public class CompanyController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Company> getAll(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
-        List<Company> returnCompanys = new ArrayList<>(companies.values());
-        if (page != null && size != null && page >= 0 && page < (returnCompanys.size() / size + 1) && size > 0) {
-            returnCompanys = returnCompanys.subList(page * size, Math.min(page * size + size, returnCompanys.size()));
+        List<Company> returnCompanies = new ArrayList<>(companies.values());
+        if (pagination(page, size, returnCompanies)) {
+            returnCompanies = returnCompanies.subList(page * size, Math.min(page * size + size, returnCompanies.size()));
         }
-        return returnCompanys;
+        return returnCompanies;
     }
 
     @GetMapping("{id}")
@@ -57,6 +57,10 @@ public class CompanyController {
     public void clear() {
         companies.clear();
         this.id = 1;
+    }
+
+    private boolean pagination(Integer page, Integer size, List<Company> returnCompanies) {
+        return page != null && size != null && page >= 0 && page < (returnCompanies.size() / size + 1) && size > 0;
     }
 
 }

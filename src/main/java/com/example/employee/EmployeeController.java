@@ -12,7 +12,7 @@ import java.util.Map;
 @RequestMapping("employees")
 public class EmployeeController {
 
-    private Map<Integer, Employee> employees = new HashMap<>();
+    private final Map<Integer, Employee> employees = new HashMap<>();
     private int id = 1;
 
     @PostMapping
