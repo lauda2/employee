@@ -26,7 +26,7 @@ public class CompanyController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Company> getAll(@RequestParam(required = false) String gender, @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+    public List<Company> getAll(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
         List<Company> returnCompanys = new ArrayList<>(companies.values());
         if (page != null && size != null && page >= 0 && page < (returnCompanys.size() / size + 1) && size > 0) {
             returnCompanys = returnCompanys.subList(page * size, Math.min(page * size + size, returnCompanys.size()));
